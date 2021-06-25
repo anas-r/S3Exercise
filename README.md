@@ -13,5 +13,5 @@ Il est impératif de modifier les paramètres globaux de connexion dans le fichi
 
 Il est ainsi possible de lancer le script `s3_ex_anas_rachyd.py`.
 
-**Exemple de commande:** ``/bin/python3 /home/anasr/Documents/S3Exercise-main/s3_ex_anas_rachyd.py CHEMIN_COMPLET_VERS_LE_DOSSIER **NOM_DU_BUCKET**``
+**Exemple de commande:** ``/bin/python3 /home/anasr/Documents/S3Exercise-main/s3_ex_anas_rachyd.py **CHEMIN_COMPLET_VERS_LE_DOSSIER** **NOM_DU_BUCKET**``
 Dans le cas courant, ``**CHEMIN_COMPLET_VERS_LE_DOSSIER**`` peut être ``/home/anasr/Documents/S3Exercise-main/random``.
