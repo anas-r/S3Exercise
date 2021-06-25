@@ -113,8 +113,8 @@ if __name__ == '__main__':
         try:
             print('Syncing "{0}" with "{1}"'.format(bucket_name, folder_path),end="\n")
             bucket = s3.list_objects(Bucket=sys.argv[2])
-            upload_to_bucket(folder_path, bucket_name)
             delete_unnexisting_files(folder_path, bucket_name)
+            upload_to_bucket(folder_path, bucket_name)
             print("Sync complete.")
         except ClientError as e:
             logging.log(e)
