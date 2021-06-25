@@ -20,6 +20,8 @@ def upload_file_to_bucket(file, bucket_name):
     s3.upload_file(file, bucket_name, file)
 
 if __name__ == '__main__':
+    if not os.path.exists('random'):
+        os.makedirs('random')
     # création
     for i in range(20):
         f = open(os.path.join(os.getcwd(),'random','random-{}'.format(i)), 'wb')

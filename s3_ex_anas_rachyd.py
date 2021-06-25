@@ -6,11 +6,7 @@ from botocore.client import Config
 from botocore.exceptions import ClientError
 from hashlib import md5
 from binascii import hexlify
-
-# GLOBAL PARAMS
-ENDPOINT_URL = 'http://172.17.0.2:9000'
-KEY_ID = 'minio'
-ACCESS_KEY = 'miniokey'
+from config import ENDPOINT_URL, KEY_ID, ACCESS_KEY
 
 s3 = boto3.client('s3',
                 endpoint_url=ENDPOINT_URL,
@@ -28,7 +24,7 @@ def check_file_in_bucket(file, bucket):
     :param obj bucket: object de type bucket.
 
     '''
-    file_md5 = md5(open(file, 'rb').read()).hexdigest()
+    file_md5 = md5(open(os.path.join(folder_path,file), 'rb').read()).hexdigest()
     if bucket is not None:
         for obj in bucket:
             obj_md5 = obj.get('ETag')[1:-1]
@@ -47,7 +43,7 @@ def check_obj_in_folder(obj, folder_path):
     obj_md5 = obj.get('ETag')[1:-1]
     folder_files = get_first_level_files(folder_path)
     for file in folder_files:
-        file_md5 = md5(open(file, 'rb').read()).hexdigest()
+        file_md5 = md5(open(os.path.join(folder_path,file), 'rb').read()).hexdigest()
         if file_md5 == obj_md5:
             return True
     return False
@@ -82,7 +78,7 @@ def upload_to_bucket(folder_path, bucket_name):
     for file in folder_files:
         if not (check_file_in_bucket(file, bucket)):
             try:
-                s3.upload_file(file, bucket_name, file)
+                s3.upload_file(os.path.join(folder_path,file), bucket_name, file)
                 print("Uploaded file: {0}".format(file))
             except ClientError as e:
                 logging.error(e)
@@ -115,8 +111,10 @@ if __name__ == '__main__':
         folder_path = sys.argv[1]
         bucket_name = sys.argv[2]
         try:
+            print('Syncing "{0}" with "{1}"'.format(bucket_name, folder_path),end="\n")
             bucket = s3.list_objects(Bucket=sys.argv[2])
             upload_to_bucket(folder_path, bucket_name)
             delete_unnexisting_files(folder_path, bucket_name)
+            print("Sync complete.")
         except ClientError as e:
             logging.log(e)
